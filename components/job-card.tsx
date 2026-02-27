@@ -1,21 +1,9 @@
 "use client";
 
 import { Job } from "@/types/job";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  MapPin,
-  Briefcase,
-  Clock,
-  IndianRupee,
-  ExternalLink,
-} from "lucide-react";
+import { MapPin, Briefcase, Clock, IndianRupee } from "lucide-react";
 import { motion } from "framer-motion";
 
 import React, { useMemo } from "react";
@@ -98,12 +86,6 @@ export const JobCard = React.memo(({ job, index }: JobCardProps) => {
             ))}
           </div>
         </CardContent>
-        <CardFooter className="pt-2">
-          <Button variant="outline" className="w-full group/btn" size="sm">
-            View Details
-            <ExternalLink className="ml-2 h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-          </Button>
-        </CardFooter>
       </Card>
     </motion.div>
   );

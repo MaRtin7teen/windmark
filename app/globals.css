@@ -80,13 +80,32 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 transition-colors duration-500 ease-in-out;
+    @apply border-border outline-ring/50;
+    transition:
+      background-color 0.5s ease-in-out,
+      border-color 0.5s ease-in-out,
+      color 0.5s ease-in-out,
+      box-shadow 0.5s ease-in-out;
   }
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/20 selection:text-primary;
+    transition:
+      background-color 0.5s ease-in-out,
+      color 0.5s ease-in-out;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
+  }
+  button,
+  a,
+  [role="button"] {
+    @apply cursor-pointer;
+  }
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.96);
+    transition: transform 0.1s ease;
   }
 }
 

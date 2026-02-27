@@ -38,7 +38,10 @@ function JobsContent() {
   const { data: allData, isLoading } = useJobs();
   const allJobs = allData?.jobs || [];
 
-  const { ref, inView } = useInView();
+  const { ref, inView } = useInView({
+    threshold: 0,
+    rootMargin: "400px",
+  });
 
   const dynamicOptions = useMemo(() => {
     const categories = new Set<string>();
@@ -217,11 +220,17 @@ function JobsContent() {
                 ))}
               </div>
             ) : displayedJobs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
-                {displayedJobs.map((job, i) => (
-                  <JobCard key={job.id} job={job} index={i} />
-                ))}
-              </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+                  {displayedJobs.map((job, i) => (
+                    <JobCard key={job.id} job={job} index={i} />
+                  ))}
+                </div>
+                {/* Sentinel for infinite scroll */}
+                {isInfiniteMode && hasNextPage && (
+                  <div ref={ref} className="h-20 w-full" />
+                )}
+              </>
             ) : (
               <motion.div
                 initial={{ opacity: 0 }}

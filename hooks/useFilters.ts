@@ -30,17 +30,21 @@ export function useFilters() {
 
   const updateFilters = useCallback(
     (newFilters: Partial<JobFilters & { sort: SortOption }>) => {
-      const params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(searchParams.toString());
 
       Object.entries(newFilters).forEach(([key, value]) => {
         if (key === "salary_range" && Array.isArray(value)) {
-          params.set("min_salary", String(value[0]));
-          params.set("max_salary", String(value[1]));
+          if (value[0] === 0) params.delete("min_salary");
+          else params.set("min_salary", String(value[0]));
+          if (value[1] === 500000) params.delete("max_salary");
+          else params.set("max_salary", String(value[1]));
         } else if (
           value === null ||
           value === undefined ||
           value === "" ||
           value === "all" ||
+          value === false ||
+          value === 0 ||
           (Array.isArray(value) && value.length === 0)
         ) {
           params.delete(key);
@@ -53,38 +57,43 @@ export function useFilters() {
       });
 
       const newQuery = params.toString();
-      const currentQuery = new URLSearchParams(
-        window.location.search,
-      ).toString();
+      const currentQuery = searchParams.toString();
 
       if (newQuery !== currentQuery) {
         router.push(`?${newQuery}`, { scroll: false });
       }
     },
-    [router],
+    [router, searchParams],
   );
 
   const filterJobs = useCallback(
     (jobs: Job[]) => {
       return jobs
         .filter((job) => {
+          const searchLower = filters.search.toLowerCase().trim();
           const matchesSearch =
-            !filters.search ||
-            job.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-            job.company.toLowerCase().includes(filters.search.toLowerCase()) ||
-            job.description
-              .toLowerCase()
-              .includes(filters.search.toLowerCase());
+            !searchLower ||
+            job.title.toLowerCase().includes(searchLower) ||
+            job.company.toLowerCase().includes(searchLower) ||
+            job.description.toLowerCase().includes(searchLower);
 
           const matchesLocation =
-            filters.location === "all" || job.location === filters.location;
+            filters.location === "all" ||
+            job.location.trim().toLowerCase() ===
+              filters.location.trim().toLowerCase();
 
           const matchesType =
             filters.employment_types.length === 0 ||
-            filters.employment_types.includes(job.employment_type);
+            filters.employment_types.some(
+              (t) =>
+                t.trim().toLowerCase() ===
+                job.employment_type.trim().toLowerCase(),
+            );
 
           const matchesCategory =
-            filters.category === "all" || job.job_category === filters.category;
+            filters.category === "all" ||
+            job.job_category.trim().toLowerCase() ===
+              filters.category.trim().toLowerCase();
 
           const matchesRemote = !filters.is_remote || job.is_remote_work === 1;
 
