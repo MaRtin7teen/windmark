@@ -64,6 +64,6 @@ Ensure you have [Node.js](https://nodejs.org/) installed and [pnpm](https://pnpm
 
 ---
 
-Live link: [Windmark](https://windmark.vercel.app/)
+Live link: [Windmark](https://windmark-six.vercel.app/)
 
 Built with ❤️
